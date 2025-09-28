@@ -84,30 +84,24 @@ const HeroCarousel = () => {
 
           {/* Right Side - Image Cards */}
           <div className="flex justify-center lg:justify-end">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 max-w-md">
+            <div className="flex flex-col lg:flex-row gap-4 max-w-md lg:max-w-2xl">
               {carouselData.map((item, index) => (
                 <Card 
                   key={index}
-                  className={`nature-card p-6 cursor-pointer transition-all duration-500 ${
+                  className={`nature-card p-0 cursor-pointer transition-all duration-500 overflow-hidden ${
                     index === currentIndex 
                       ? 'scale-110 shadow-2xl ring-2 ring-primary' 
                       : 'scale-100 opacity-80 hover:opacity-100'
                   }`}
                   onClick={() => setCurrentIndex(index)}
                 >
-                  <div className="aspect-video mb-4 overflow-hidden rounded-lg">
+                  <div className="aspect-video lg:aspect-square w-full h-32 lg:h-40">
                     <img 
                       src={item.cardImage} 
                       alt={item.cardTitle}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold text-card-foreground mb-2">
-                    {item.cardTitle}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {item.cardDescription}
-                  </p>
                 </Card>
               ))}
             </div>
