@@ -2,41 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Fishing Park Design System - Nature inspired colors and gradients */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - Light theme */
+    --background: 195 10% 98%;
+    --foreground: 210 25% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card colors */
+    --card: 190 15% 96%;
+    --card-foreground: 210 25% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popover colors */
+    --popover: 190 15% 96%;
+    --popover-foreground: 210 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Deep forest green */
+    --primary: 145 35% 25%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 145 45% 35%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Lake blue */
+    --secondary: 200 60% 85%;
+    --secondary-foreground: 210 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted colors */
+    --muted: 195 15% 92%;
+    --muted-foreground: 210 20% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Warm sunset orange */
+    --accent: 25 85% 65%;
+    --accent-foreground: 0 0% 98%;
 
+    /* Nature gradient colors */
+    --nature-primary: 145 35% 25%;
+    --nature-secondary: 200 55% 45%;
+    --nature-accent: 25 85% 65%;
+
+    /* Destructive */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders and inputs */
+    --border: 195 20% 88%;
+    --input: 195 20% 88%;
+    --ring: 145 35% 25%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-nature: linear-gradient(135deg, hsl(var(--nature-primary)), hsl(var(--nature-secondary)));
+    --gradient-sunset: linear-gradient(135deg, hsl(var(--nature-accent)), hsl(var(--nature-primary)));
+    --gradient-water: linear-gradient(180deg, hsl(var(--nature-secondary)), hsl(200 70% 65%));
+
+    /* Shadows */
+    --shadow-nature: 0 10px 30px -10px hsl(var(--nature-primary) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +82,48 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Base colors - Dark theme */
+    --background: 210 30% 8%;
+    --foreground: 195 15% 92%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    /* Card colors */
+    --card: 210 25% 12%;
+    --card-foreground: 195 15% 92%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    /* Popover colors */
+    --popover: 210 25% 12%;
+    --popover-foreground: 195 15% 92%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - Bright nature green */
+    --primary: 145 45% 55%;
+    --primary-foreground: 210 30% 8%;
+    --primary-glow: 145 55% 65%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Deep lake blue */
+    --secondary: 200 35% 25%;
+    --secondary-foreground: 195 15% 92%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted colors */
+    --muted: 210 20% 18%;
+    --muted-foreground: 195 10% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent - Warm campfire orange */
+    --accent: 25 75% 55%;
+    --accent-foreground: 210 30% 8%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Nature gradient colors - dark theme */
+    --nature-primary: 145 45% 55%;
+    --nature-secondary: 200 45% 35%;
+    --nature-accent: 25 75% 55%;
+
+    /* Destructive */
+    --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Borders and inputs */
+    --border: 210 20% 22%;
+    --input: 210 20% 22%;
+    --ring: 145 45% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +141,39 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+@layer components {
+  /* Hero button variant */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground 
+           border-0 shadow-nature hover:shadow-glow transform hover:scale-105
+           transition-all duration-300 rounded-lg font-semibold;
+  }
+
+  /* Nature card styling */
+  .nature-card {
+    @apply bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl
+           shadow-lg hover:shadow-nature transform hover:scale-105
+           transition-all duration-300;
+  }
+
+  /* Gradient backgrounds */
+  .bg-nature-gradient {
+    background: var(--gradient-nature);
+  }
+
+  .bg-sunset-gradient {
+    background: var(--gradient-sunset);
+  }
+
+  .bg-water-gradient {
+    background: var(--gradient-water);
   }
 }
