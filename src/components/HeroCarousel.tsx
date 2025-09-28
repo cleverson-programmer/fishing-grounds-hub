@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
+import LoadingBar from "./LoadingBar";
 import fishingPark1 from "@/assets/fishing-park-1.jpg";
 import fishingPark2 from "@/assets/fishing-park-2.jpg";
 import fishingPark3 from "@/assets/fishing-park-3.jpg";
@@ -7,6 +8,8 @@ import fishingGuide from "@/assets/fishing-guide.jpg";
 
 const HeroCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const carouselData = [
     {
@@ -36,20 +39,65 @@ const HeroCarousel = () => {
   ];
 
   // Auto-advance carousel every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === carouselData.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 3000);
+  const handleAdvanceCarousel = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === carouselData.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
-    return () => clearInterval(interval);
-  }, [carouselData.length]);
+  const handleCardClick = (index: number) => {
+    if (index === currentIndex) return;
+    
+    setIsTransitioning(true);
+    const clickedCard = cardRefs.current[index];
+    
+    if (clickedCard) {
+      // Get card position for transition effect
+      const cardRect = clickedCard.getBoundingClientRect();
+      const expandingElement = document.createElement('div');
+      expandingElement.style.position = 'fixed';
+      expandingElement.style.left = `${cardRect.left}px`;
+      expandingElement.style.top = `${cardRect.top}px`;
+      expandingElement.style.width = `${cardRect.width}px`;
+      expandingElement.style.height = `${cardRect.height}px`;
+      expandingElement.style.backgroundImage = `url(${carouselData[index].background})`;
+      expandingElement.style.backgroundSize = 'cover';
+      expandingElement.style.backgroundPosition = 'center';
+      expandingElement.style.zIndex = '40';
+      expandingElement.style.borderRadius = '0.5rem';
+      expandingElement.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      
+      document.body.appendChild(expandingElement);
+      
+      // Trigger expansion
+      setTimeout(() => {
+        expandingElement.style.left = '0px';
+        expandingElement.style.top = '0px';
+        expandingElement.style.width = '100vw';
+        expandingElement.style.height = '100vh';
+        expandingElement.style.borderRadius = '0px';
+      }, 10);
+      
+      // Complete transition
+      setTimeout(() => {
+        setCurrentIndex(index);
+        setIsTransitioning(false);
+        document.body.removeChild(expandingElement);
+      }, 800);
+    } else {
+      setCurrentIndex(index);
+      setIsTransitioning(false);
+    }
+  };
 
   const currentSlide = carouselData[currentIndex];
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <>
+      {/* Loading Bar */}
+      <LoadingBar duration={3000} onComplete={handleAdvanceCarousel} />
+      
+      <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background Image with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
@@ -84,18 +132,19 @@ const HeroCarousel = () => {
 
           {/* Right Side - Image Cards */}
           <div className="flex justify-center lg:justify-end">
-            <div className="flex flex-col lg:flex-row gap-4 max-w-md lg:max-w-2xl">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-md lg:max-w-4xl">
               {carouselData.map((item, index) => (
                 <Card 
                   key={index}
+                  ref={(el) => cardRefs.current[index] = el}
                   className={`nature-card p-0 cursor-pointer transition-all duration-500 overflow-hidden ${
                     index === currentIndex 
                       ? 'scale-110 shadow-2xl ring-2 ring-primary' 
                       : 'scale-100 opacity-80 hover:opacity-100'
                   }`}
-                  onClick={() => setCurrentIndex(index)}
+                  onClick={() => handleCardClick(index)}
                 >
-                  <div className="aspect-video lg:aspect-square w-full h-32 lg:h-40">
+                  <div className="aspect-video lg:aspect-square w-full h-40 lg:h-56">
                     <img 
                       src={item.cardImage} 
                       alt={item.cardTitle}
@@ -114,7 +163,7 @@ const HeroCarousel = () => {
         {carouselData.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => handleCardClick(index)}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === currentIndex 
                 ? 'bg-primary scale-125' 
@@ -123,7 +172,8 @@ const HeroCarousel = () => {
           />
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
