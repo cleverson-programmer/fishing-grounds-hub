@@ -153,15 +153,24 @@
   /* Hero button variant */
   .btn-hero {
     @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground 
-           border-0 shadow-nature hover:shadow-glow transform hover:scale-105
+           border-0 shadow-lg transform hover:scale-105
            transition-all duration-300 rounded-lg font-semibold;
+    box-shadow: var(--shadow-nature);
+  }
+  
+  .btn-hero:hover {
+    box-shadow: var(--shadow-glow);
   }
 
   /* Nature card styling */
   .nature-card {
     @apply bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl
-           shadow-lg hover:shadow-nature transform hover:scale-105
+           shadow-lg transform hover:scale-105
            transition-all duration-300;
+  }
+  
+  .nature-card:hover {
+    box-shadow: var(--shadow-nature);
   }
 
   /* Gradient backgrounds */
