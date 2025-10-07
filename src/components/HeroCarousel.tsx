@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import LoadingBar from "./LoadingBar";
 import fishingPark1 from "@/assets/fishing-park-1.jpg";
@@ -9,6 +9,7 @@ import fishingGuide from "@/assets/fishing-guide.jpg";
 const HeroCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [loadingKey, setLoadingKey] = useState(0);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const carouselData = [
@@ -46,7 +47,7 @@ const HeroCarousel = () => {
   };
 
   const handleCardClick = (index: number) => {
-    if (index === currentIndex) return;
+    if (index === currentIndex || isTransitioning) return;
     
     setIsTransitioning(true);
     const clickedCard = cardRefs.current[index];
@@ -65,33 +66,41 @@ const HeroCarousel = () => {
       expandingElement.style.top = `${imageRect.top}px`;
       expandingElement.style.width = `${imageRect.width}px`;
       expandingElement.style.height = `${imageRect.height}px`;
-      expandingElement.style.backgroundImage = `url(${carouselData[index].background})`;
+      expandingElement.style.backgroundImage = `url(${carouselData[index].cardImage})`;
       expandingElement.style.backgroundSize = 'cover';
       expandingElement.style.backgroundPosition = 'center';
       expandingElement.style.zIndex = '40';
       expandingElement.style.borderRadius = '0.5rem';
-      expandingElement.style.transition = 'all 1s cubic-bezier(0.22, 1, 0.36, 1)';
+      expandingElement.style.transition = 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
       expandingElement.style.transformOrigin = 'center';
       
       document.body.appendChild(expandingElement);
       
       // Trigger expansion with a slight delay for better visual effect
-      setTimeout(() => {
-        expandingElement.style.left = '0px';
-        expandingElement.style.top = '0px';
-        expandingElement.style.width = '100vw';
-        expandingElement.style.height = '100vh';
-        expandingElement.style.borderRadius = '0px';
-      }, 50);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          expandingElement.style.left = '0px';
+          expandingElement.style.top = '0px';
+          expandingElement.style.width = '100vw';
+          expandingElement.style.height = '100vh';
+          expandingElement.style.borderRadius = '0px';
+        }, 50);
+      });
       
       // Complete transition
       setTimeout(() => {
         setCurrentIndex(index);
+        setLoadingKey(prev => prev + 1); // Reset loading bar
         setIsTransitioning(false);
-        document.body.removeChild(expandingElement);
-      }, 1000);
+        try {
+          document.body.removeChild(expandingElement);
+        } catch (e) {
+          // Element already removed
+        }
+      }, 850);
     } else {
       setCurrentIndex(index);
+      setLoadingKey(prev => prev + 1); // Reset loading bar
       setIsTransitioning(false);
     }
   };
@@ -101,14 +110,15 @@ const HeroCarousel = () => {
   return (
     <>
       {/* Loading Bar */}
-      <LoadingBar duration={3000} onComplete={handleAdvanceCarousel} />
+      <LoadingBar key={loadingKey} duration={3000} onComplete={handleAdvanceCarousel} />
       
       <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background Image with overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 ease-out"
         style={{ 
-          backgroundImage: `url(${currentSlide.background})`,
+          backgroundImage: `url(${currentSlide.cardImage})`,
+          opacity: isTransitioning ? 0 : 1,
         }}
       >
         <div className="absolute inset-0 bg-black/30" />
@@ -119,18 +129,21 @@ const HeroCarousel = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
           
           {/* Left Side - Title and Subtitle */}
-          <div className="text-center lg:text-left space-y-6">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+          <div 
+            className="text-center lg:text-left space-y-6 transition-all duration-500"
+            style={{ opacity: isTransitioning ? 0 : 1, transform: isTransitioning ? 'translateY(20px)' : 'translateY(0)' }}
+          >
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight drop-shadow-lg">
               {currentSlide.title}
             </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl">
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl drop-shadow-md">
               {currentSlide.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button className="btn-hero px-8 py-4 text-lg">
+              <button className="btn-hero px-8 py-4 text-lg shadow-xl">
                   Reserve Sua Aventura
                 </button>
-                <button className="px-8 py-4 text-lg border-2 border-white text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg font-semibold">
+                <button className="px-8 py-4 text-lg border-2 border-white text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg font-semibold shadow-xl">
                   Saiba Mais
                 </button>
             </div>
@@ -145,9 +158,9 @@ const HeroCarousel = () => {
                   ref={(el) => cardRefs.current[index] = el}
                   className={`nature-card p-0 cursor-pointer transition-all duration-500 overflow-hidden w-[180px] h-[240px] ${
                     index === currentIndex 
-                      ? 'shadow-2xl ring-2 ring-primary' 
-                      : 'opacity-80 hover:opacity-100'
-                  }`}
+                      ? 'shadow-2xl ring-2 ring-primary scale-105' 
+                      : 'opacity-80 hover:opacity-100 hover:scale-105'
+                  } ${isTransitioning ? 'pointer-events-none' : ''}`}
                   onClick={() => handleCardClick(index)}
                 >
                   <div className="w-full h-full">
@@ -155,6 +168,7 @@ const HeroCarousel = () => {
                       src={item.cardImage} 
                       alt={item.cardTitle}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      loading={index === 0 ? "eager" : "lazy"}
                     />
                   </div>
                 </Card>
