@@ -1,6 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Moon, Sun, Fish, User, Search } from "lucide-react";
+import {
+  Search,
+  Sun,
+  Moon,
+  Calendar,
+  User,
+  Fish,
+  LogIn,
+  UserPlus,
+  LogOut,
+} from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Separator } from "@/components/ui/separator";
+import { Link as RouterLink } from "react-router-dom";
 import { useTheme } from "next-themes";
 import logo from "@/assets/logo.svg";
 
@@ -16,41 +33,29 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <img 
-            src={logo} 
-            alt="Fishing Park Logo" 
-            className="h-10 w-10"
-          />
-          <h1 className="text-xl font-bold text-white">
-            Pine Lake Fishing Park
-          </h1>
+          <img src={logo} alt="Fishing Park Logo" className="h-10 w-10" />
+          <h1 className="text-xl font-bold text-white">Duzepesqueiro</h1>
         </div>
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <a 
-            href="#events" 
+          <RouterLink
+            to="/events"
             className="text-white/90 hover:text-white transition-colors duration-200 font-medium"
           >
-            Events
-          </a>
-          <a 
-            href="#store" 
+            Eventos
+          </RouterLink>
+          <RouterLink
+            to="/store"
             className="text-white/90 hover:text-white transition-colors duration-200 font-medium"
           >
-            Store
-          </a>
-          <a 
-            href="#about" 
+            Loja
+          </RouterLink>
+          <a
+            href="#about"
             className="text-white/90 hover:text-white transition-colors duration-200 font-medium"
           >
-            About
-          </a>
-          <a 
-            href="#account" 
-            className="text-white/90 hover:text-white transition-colors duration-200 font-medium"
-          >
-            Account
+            Sobre
           </a>
         </nav>
 
@@ -65,15 +70,35 @@ const Header = () => {
               className="pl-10 w-64 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
             />
           </div>
-          
-          {/* User Account Icon */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="border-white/20 text-white hover:bg-white/10"
-          >
-            <User className="h-4 w-4" />
-          </Button>
+
+          {/* User account */}
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <User className="h-5 w-5" />
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-56" align="end">
+              <div className="flex flex-col gap-2">
+                <Button variant="ghost" className="justify-start gap-2 w-full">
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Button>
+                <Button variant="ghost" className="justify-start gap-2 w-full">
+                  <UserPlus className="h-4 w-4" />
+                  Register
+                </Button>
+                <Separator />
+                <Button
+                  variant="ghost"
+                  className="justify-start gap-2 w-full text-destructive hover:text-destructive"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
 
           {/* Theme Toggle */}
           <Button
@@ -91,11 +116,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <Button
-          variant="outline"
-          size="icon"
-          className="md:hidden ml-2"
-        >
+        <Button variant="outline" size="icon" className="md:hidden ml-2">
           <Fish className="h-4 w-4" />
         </Button>
       </div>

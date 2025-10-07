@@ -14,27 +14,27 @@ const HeroCarousel = () => {
   const carouselData = [
     {
       background: fishingPark1,
-      title: "Welcome to Pine Lake",
-      subtitle: "Experience the serenity of nature's finest fishing destination",
+      title: "Bem-vindo ao Lago dos Pinheiros",
+      subtitle: "Experimente a serenidade do melhor destino de pesca da natureza",
       cardImage: fishingGuide,
-      cardTitle: "Expert Guides",
-      cardDescription: "Professional guidance for the perfect catch"
+      cardTitle: "Guias Especializados",
+      cardDescription: "Orientação profissional para a pesca perfeita"
     },
     {
       background: fishingPark2,
-      title: "Sunset Fishing",
-      subtitle: "Discover magical moments as the sun sets over crystal waters",
+      title: "Pesca ao Pôr do Sol",
+      subtitle: "Descubra momentos mágicos enquanto o sol se põe sobre águas cristalinas",
       cardImage: fishingPark1,
-      cardTitle: "Premium Spots",
-      cardDescription: "Access to the best fishing locations"
+      cardTitle: "Locais Premium",
+      cardDescription: "Acesso aos melhores pontos de pesca"
     },
     {
       background: fishingPark3,
-      title: "Family Adventures",
-      subtitle: "Create lasting memories with family-friendly fishing experiences",
+      title: "Aventuras em Família",
+      subtitle: "Crie memórias duradouras com experiências de pesca para toda a família",
       cardImage: fishingPark2,
-      cardTitle: "All Ages Welcome",
-      cardDescription: "Perfect for beginners and experts alike"
+      cardTitle: "Todas as Idades",
+      cardDescription: "Perfeito para iniciantes e especialistas"
     }
   ];
 
@@ -54,36 +54,42 @@ const HeroCarousel = () => {
     if (clickedCard) {
       // Get card position for transition effect
       const cardRect = clickedCard.getBoundingClientRect();
+      
+      // Find the image element within the card
+      const cardImage = clickedCard.querySelector('img');
+      const imageRect = cardImage ? cardImage.getBoundingClientRect() : cardRect;
+      
       const expandingElement = document.createElement('div');
       expandingElement.style.position = 'fixed';
-      expandingElement.style.left = `${cardRect.left}px`;
-      expandingElement.style.top = `${cardRect.top}px`;
-      expandingElement.style.width = `${cardRect.width}px`;
-      expandingElement.style.height = `${cardRect.height}px`;
+      expandingElement.style.left = `${imageRect.left}px`;
+      expandingElement.style.top = `${imageRect.top}px`;
+      expandingElement.style.width = `${imageRect.width}px`;
+      expandingElement.style.height = `${imageRect.height}px`;
       expandingElement.style.backgroundImage = `url(${carouselData[index].background})`;
       expandingElement.style.backgroundSize = 'cover';
       expandingElement.style.backgroundPosition = 'center';
       expandingElement.style.zIndex = '40';
       expandingElement.style.borderRadius = '0.5rem';
-      expandingElement.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      expandingElement.style.transition = 'all 1s cubic-bezier(0.22, 1, 0.36, 1)';
+      expandingElement.style.transformOrigin = 'center';
       
       document.body.appendChild(expandingElement);
       
-      // Trigger expansion
+      // Trigger expansion with a slight delay for better visual effect
       setTimeout(() => {
         expandingElement.style.left = '0px';
         expandingElement.style.top = '0px';
         expandingElement.style.width = '100vw';
         expandingElement.style.height = '100vh';
         expandingElement.style.borderRadius = '0px';
-      }, 10);
+      }, 50);
       
       // Complete transition
       setTimeout(() => {
         setCurrentIndex(index);
         setIsTransitioning(false);
         document.body.removeChild(expandingElement);
-      }, 800);
+      }, 1000);
     } else {
       setCurrentIndex(index);
       setIsTransitioning(false);
@@ -122,11 +128,11 @@ const HeroCarousel = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button className="btn-hero px-8 py-4 text-lg">
-                Book Your Adventure
-              </button>
-              <button className="px-8 py-4 text-lg border-2 border-white text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg font-semibold">
-                Learn More
-              </button>
+                  Reserve Sua Aventura
+                </button>
+                <button className="px-8 py-4 text-lg border-2 border-white text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg font-semibold">
+                  Saiba Mais
+                </button>
             </div>
           </div>
 
@@ -137,14 +143,14 @@ const HeroCarousel = () => {
                 <Card 
                   key={index}
                   ref={(el) => cardRefs.current[index] = el}
-                  className={`nature-card p-0 cursor-pointer transition-all duration-500 overflow-hidden ${
+                  className={`nature-card p-0 cursor-pointer transition-all duration-500 overflow-hidden w-[180px] h-[240px] ${
                     index === currentIndex 
-                      ? 'scale-110 shadow-2xl ring-2 ring-primary' 
-                      : 'scale-100 opacity-80 hover:opacity-100'
+                      ? 'shadow-2xl ring-2 ring-primary' 
+                      : 'opacity-80 hover:opacity-100'
                   }`}
                   onClick={() => handleCardClick(index)}
                 >
-                  <div className="aspect-video lg:aspect-square w-full h-40 lg:h-56">
+                  <div className="w-full h-full">
                     <img 
                       src={item.cardImage} 
                       alt={item.cardTitle}
